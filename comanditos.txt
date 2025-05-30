@@ -1,0 +1,3 @@
+mvn -Dtest=ReportWorkshopServiceTest test
+
+sdk install java 17.0.11-jbr
