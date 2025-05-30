@@ -37,8 +37,8 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: 🔬 Ejecutar tests y generar cobertura
-        run: mvn clean verify jacoco:report
+      - name: 🔬 Ejecutar tests (sin cobertura JaCoCo)
+        run: mvn clean verify
         env:
           BOOTSTRAP_SERVER: ${{ secrets.BOOTSTRAP_SERVER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -55,5 +55,4 @@ jobs:
       - name: 📊 Análisis SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn sonar:sonar -Dsonar.projectKey=LizbetArias_AS222S6_ms_PRS1 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-     
+        run: mvn sonar:sonar -Dsonar.projectKey=LizbetArias_AS222S6_ms_PRS1
