@@ -26,7 +26,7 @@ pipeline {
     stages {
         stage('Clonar repositorio') {
             steps {
-                git url: 'https://github.com/LizbetArias/AS222S6_ms_PRS1.git', branch: 'Backend'
+                git url: 'https://github.com/LizbetArias/ms-report-trimestre-PRS1.git', branch: 'develop-report-workshop-service'
             }
         }
         stage('Compilar Proyecto') {
@@ -52,7 +52,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
                         sh '''
                             mvn sonar:sonar \
-                            -Dsonar.projectKey=LizbetArias_AS222S6_ms_PRS1 \
+                            -Dsonar.projectKey=LizbetArias_ms-report-trimestre-PRS1 \
                             -Dsonar.organization=lizbetarias \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.login=${SONAR_AUTH_TOKEN}
