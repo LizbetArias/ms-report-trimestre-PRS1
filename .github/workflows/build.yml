@@ -2,9 +2,9 @@ name: 🛠️ Backend Build & SonarCloud
 
 on:
   push:
-    branches: [ Backend ]
+    branches: [ develop-report-workshop-service ]
   pull_request:
-    branches: [ Backend ]
+    branches: [ develop-report-workshop-service ]
 
 jobs:
   build:
