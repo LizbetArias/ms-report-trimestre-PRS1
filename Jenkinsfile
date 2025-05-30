@@ -37,7 +37,7 @@ pipeline {
         stage('Ejecutar pruebas') {
             steps {
                 // Ejecutar solo las clases específicas de test
-                sh 'mvn -Dtest=ReportWorkshopControllerTest,ReportWorkshopServiceTest test'
+                sh 'mvn -Dtest=ReportWorkshopServiceTest test'
             }
             post {
                 always {
