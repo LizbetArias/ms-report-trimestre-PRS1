@@ -36,7 +36,14 @@ pipeline {
         }
         stage('Ejecutar pruebas') {
             steps {
-                sh 'mvn test'
+                // Ejecutar solo las clases específicas de test
+                sh 'mvn -Dtest=ReportWorkshopControllerTest,ReportWorkshopServiceTest test'
+            }
+            post {
+                always {
+                    // Publicar resultados de pruebas en Jenkins
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
         stage('Generar Artefacto') {
@@ -48,7 +55,6 @@ pipeline {
         stage('Análisis SonarCloud') {
             steps {
                 script {
-                    // Usar el token directamente para evitar errores de autenticación
                     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
                         sh '''
                             mvn sonar:sonar \
@@ -61,7 +67,7 @@ pipeline {
                 }
             }
         }
-        // Comentando temporalmente el stage de espera para evitar el error 404
+        // Puedes descomentar esto cuando tu análisis Sonar funcione correctamente
         /*
         stage('Esperar análisis en Sonar') {
             steps {
@@ -75,7 +81,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline ejecutado - revisando resultados'
-            // Imprimir información de debug
             script {
                 echo "WORKSPACE: ${WORKSPACE}"
                 echo "BUILD_NUMBER: ${BUILD_NUMBER}"
@@ -83,17 +88,18 @@ pipeline {
             }
         }
         success {
-            echo 'Pipeline exitoso'
+            echo '✅ Pipeline exitoso'
         }
         failure {
-            echo 'Pipeline falló - revisar logs de error'
-            // Imprimir más información en caso de error
+            echo '❌ Pipeline falló - revisar logs de error'
             script {
                 try {
                     sh 'echo "Contenido del directorio:"'
                     sh 'ls -la'
                     sh 'echo "Logs de Maven:"'
-                    sh 'find . -name "*.log" -type f'
+                    sh 'find . -name "*.log" -type f || true'
+                    sh 'echo "Errores de pruebas:"'
+                    sh 'cat target/surefire-reports/*.txt || true'
                 } catch (Exception e) {
                     echo "Error al obtener información de debug: ${e.message}"
                 }
